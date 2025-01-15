@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+def localProperties = new Properties()
+try {
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+} catch (Exception e) {
+    logger.warn("No Local Properties File Found!")
+}
+
+android {
+    signingConfigs {
+        /* TODO(developer): Configure to sign app with a release key for testing.
+        release {
+            storeFile file('path/to/release/signing/key')
+            keyAlias 'release_key_alias'
+            keyPassword "${password}"
+            storePassword "${password}"
+        }*/
+    }
+    compileSdkVersion 30
+    buildToolsVersion '30.0.3'
+
+    defaultConfig {
+        applicationId 'com.sample.android.trivialdrivesample'
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 8
+        versionName "1.5"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
+        if (!localProperties['base64EncodedPublicKey']) {
+            logger.warn('base64EncodedPublicKey must be set for signature verification. ' +
+                    'You can add it to local.properties once you have gotten it from Play. ' +
+                    'Example: base64EncodedPublicKey=[key value]')
+        }
+        buildConfigField("String", "BASE64_ENCODED_PUBLIC_KEY", "\"" + localProperties['base64EncodedPublicKey'] + "\"")
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // TODO(developer): uncomment below once config above is complete and uncommented.
+            // signingConfig signingConfigs.release
+        }
+    }
+    buildFeatures {
+        dataBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "junit:junit:$version_junit"
+    implementation "androidx.appcompat:appcompat:$version_appcompat"
+    implementation "com.android.billingclient:billing:$version_billing"
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraintlayout"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$version_coordinatorlayout"
+    implementation "com.google.android.material:material:$version_material"
+
+
+    implementation "androidx.room:room-runtime:$version_room"
+    annotationProcessor "androidx.room:room-compiler:$version_room"
+
+    implementation "androidx.navigation:navigation-fragment:$version_navigation"
+    implementation "androidx.navigation:navigation-ui:$version_navigation"
+}
