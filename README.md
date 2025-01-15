@@ -1,3 +1,7 @@
+Original repository, which was removed for some reason:
+
+https://github.com/android/play-billing-samples
+
 # Google Play Billing Samples
 
 Sample applications for Google Play Billing. To build each sample, see the README instructions in the project directory.
